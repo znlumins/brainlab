@@ -40,7 +40,7 @@
         <nav class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-6 flex justify-between items-center relative z-50">
             <div class="text-3xl font-bold text-brand tracking-tight">BrainLab.</div>
             <div class="flex items-center gap-4 lg:gap-8">
-                <a href="cobaai" class="hidden lg:block text-slate-600 font-medium hover:text-brand transition-colors">Coba AI</a>
+                <a href="analysis" class="hidden lg:block text-slate-600 font-medium hover:text-brand transition-colors">Coba AI</a>
                 @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}" class="px-6 py-2.5 rounded-lg font-bold bg-brand text-white hover:bg-brand-hover transition-all">Dashboard</a>
