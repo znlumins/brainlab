@@ -36,23 +36,8 @@
     </head>
     <body class="antialiased bg-white text-slate-900 font-sans overflow-x-hidden">
 
-        <!-- Navbar -->
-        <nav class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-6 flex justify-between items-center relative z-50">
-            <div class="text-3xl font-bold text-brand tracking-tight">BrainLab.</div>
-            <div class="flex items-center gap-4 lg:gap-8">
-                <a href="analysis" class="hidden lg:block text-slate-600 font-medium hover:text-brand transition-colors">Coba AI</a>
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="px-6 py-2.5 rounded-lg font-bold bg-brand text-white hover:bg-brand-hover transition-all">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="px-6 py-2 rounded-lg font-bold text-brand border-2 border-brand/30 hover:border-brand hover:bg-brand/5 transition-all uppercase text-sm tracking-wide">Login</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="px-6 py-2.5 rounded-lg font-bold bg-brand text-white hover:bg-brand-hover shadow-lg shadow-brand/20 transition-all uppercase text-sm tracking-wide">Register</a>
-                        @endif
-                    @endauth
-                @endif
-            </div>
-        </nav>
+        <!-- Panggil Navbar Component -->
+        <x-navbar />
 
         <!-- Hero Section -->
         <main class="relative w-full max-w-7xl mx-auto px-6 lg:px-12 mt-8 lg:mt-12 pb-32">
@@ -79,10 +64,9 @@
                     <!-- Decorative Circle Ring -->
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] lg:w-[480px] lg:h-[480px] rounded-full border-[12px] border-slate-100 border-r-brand/80 border-b-brand/80 rotate-45 z-0"></div>
 
-                    <!-- Main Image (Placeholder Working Image) -->
+                    <!-- Main Image -->
                     <div class="relative z-10 w-full flex justify-center lg:justify-end">
-                        <!-- Saya ganti URL ini dengan gambar Pexels yang pasti aktif -->
-                        <img src="https://i.ibb.co.com/LXTCvx78/Adobe-Express-file.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
+                        <img src="" 
                              alt="Doctor BrainLab" 
                              class="h-[400px] lg:h-[990px] w-[400px] lg:w-[450px] object-cover rounded-full lg:rounded-none lg:rounded-t-full drop-shadow-2xl relative -top-40 -left-12 mask-image-custom">
                     </div>
@@ -126,6 +110,11 @@
         </main>
 
         <style>
+            /* PENAMBAHAN DI SINI */
+            body {
+                overflow: hidden; /* Menonaktifkan scroll untuk seluruh halaman */
+            }
+
             @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
             .animate-bounce-slow { animation: float 4s ease-in-out infinite; }
             .animate-bounce-delayed { animation: float 4s ease-in-out infinite 2s; }

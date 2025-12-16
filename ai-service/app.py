@@ -7,7 +7,7 @@ import numpy as np
 app = Flask(__name__)
 
 # --- CONFIG ---
-MODEL_PATH = 'best.pt' # Ganti dengan nama file model kamu
+MODEL_PATH = 'best.pt' 
 # --------------
 
 print(f"Loading model {MODEL_PATH}...")

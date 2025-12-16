@@ -21,15 +21,32 @@
 </head>
 <body class="bg-gray-50 text-slate-900 min-h-screen flex flex-col font-sans">
 
-    <!-- Header -->
-    <header class="px-6 py-4 flex justify-between items-center bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white font-bold">B</div>
-            <a href="{{ url('/') }}" class="font-bold text-xl text-gray-800">BrainLab <span class="text-brand text-sm font-medium">AI Service</span></a>
+    <!-- Header (Struktur diperbaiki agar tombol lebih dekat) -->
+    <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+        <!-- Container utama dengan max-width dan flexbox -->
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
+            
+            <!-- Sisi Kiri: Logo -->
+            <a href="/" class="text-3xl font-bold text-brand tracking-tight py-6">BrainLab.</a>
+
+            <!-- Sisi Kanan: Grup link dan tombol aksi -->
+            <div class="flex items-center gap-6 lg:gap-8">
+                
+                <!-- Link navigasi (disembunyikan di mobile) -->
+                <div class="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-600">
+                    <a href="/" class="hover:text-brand transition-colors">Home</a>
+                    <a href="/analysis" class="hover:text-brand transition-colors">Scan MRI</a>
+                    <a href="/consultation" class="hover:text-brand transition-colors">Consultation</a>
+                    <a href="/team" class="hover:text-brand transition-colors">Our Team</a>
+                </div>
+                
+                <!-- Tombol Aksi Khusus untuk halaman ini -->
+                <button onclick="resetImage()" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition whitespace-nowrap">
+                    Reset Scan
+                </button>
+            </div>
+
         </div>
-        <button onclick="resetImage()" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-            Reset Scan
-        </button>
     </header>
 
     <!-- Main Content -->
@@ -51,9 +68,7 @@
 
             <!-- State 2: Image Preview & Boxes -->
             <div id="imageWrapper" class="hidden w-full h-full relative">
-                <!-- Gambar Utama -->
                 <img id="mriImage" src="" class="w-full h-full object-contain select-none">
-                <!-- Area untuk Kotak Deteksi (Overlay) -->
                 <div id="overlayLayer" class="absolute inset-0 pointer-events-none"></div>
             </div>
 
@@ -82,24 +97,21 @@
             const file = event.target.files[0];
             if (!file) return;
 
-            // 1. Reset UI & Preview Image
-            overlay.innerHTML = ''; // Hapus kotak lama
+            overlay.innerHTML = '';
             const reader = new FileReader();
             reader.onload = function(e) {
                 img.src = e.target.result;
                 document.getElementById('uploadState').classList.add('hidden');
                 document.getElementById('imageWrapper').classList.remove('hidden');
-                document.getElementById('loadingState').classList.remove('hidden'); // Show Loading
+                document.getElementById('loadingState').classList.remove('hidden');
             }
             reader.readAsDataURL(file);
 
-            // 2. Persiapan Data ke Laravel
             const formData = new FormData();
             formData.append('image', file);
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
             try {
-                // 3. Request ke Backend
                 const response = await fetch('/analysis/predict', {
                     method: 'POST',
                     body: formData,
@@ -107,14 +119,12 @@
                 });
 
                 const data = await response.json();
-
                 if (!response.ok) throw new Error(data.error || 'Gagal melakukan prediksi');
 
-                // 4. Render Hasil
                 setTimeout(() => {
                     document.getElementById('loadingState').classList.add('hidden');
                     renderDetections(data);
-                }, 500); // Delay dikit biar smooth
+                }, 500);
 
             } catch (error) {
                 console.error(error);
@@ -128,14 +138,13 @@
             const statusText = document.getElementById('statusText');
             const statusDetail = document.getElementById('statusDetail');
             
-            statusBadge.classList.remove('opacity-0', 'translate-y-4'); // Animasi muncul
+            statusBadge.classList.remove('opacity-0', 'translate-y-4');
 
             if (detections.length === 0) {
                 statusText.innerText = "Tidak Ditemukan Kelainan (Normal)";
                 statusText.className = "bg-emerald-500 px-6 py-2 rounded-full text-white font-bold shadow-lg";
                 statusDetail.innerText = "AI tidak mendeteksi objek yang dikenali pada model ini.";
             } else {
-                // Ambil deteksi dengan confidence tertinggi
                 const top = detections.reduce((prev, current) => (prev.conf > current.conf) ? prev : current);
                 
                 statusText.innerText = `Terdeteksi: ${top.label.toUpperCase()}`;
@@ -143,16 +152,9 @@
                 statusDetail.innerText = `Akurasi tertinggi: ${(top.conf * 100).toFixed(1)}%`;
             }
 
-            // Gambar Kotak
             detections.forEach(det => {
                 const box = document.createElement('div');
-                
-                // Styling Kotak Merah
                 box.className = 'absolute border-2 border-red-500 shadow-[0_0_10px_rgba(255,0,0,0.5)] z-10 transition-all duration-300 hover:bg-red-500/10';
-                
-                // KONVERSI KOORDINAT (PENTING!)
-                // Python kirim: x (center), y (center), w, h dalam persentase (0.0 - 1.0)
-                // CSS butuh: left, top, width, height dalam %
                 
                 const left = (det.x - (det.w / 2)) * 100;
                 const top = (det.y - (det.h / 2)) * 100;
@@ -164,7 +166,6 @@
                 box.style.width = `${width}%`;
                 box.style.height = `${height}%`;
 
-                // Label di atas kotak
                 const label = document.createElement('div');
                 label.className = "absolute -top-7 left-0 bg-red-600 text-white text-[10px] uppercase font-bold px-2 py-1 rounded shadow-sm whitespace-nowrap";
                 label.innerText = `${det.label} ${(det.conf * 100).toFixed(0)}%`;
