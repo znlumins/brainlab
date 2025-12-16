@@ -52,7 +52,7 @@ Jika pengguna bertanya siapa yang membuatmu, jawab: Saya adalah bagian dari plat
             $payloadMessages = array_merge([['role' => 'system', 'content' => $systemPrompt]], $messages);
 
             
-            $apiKey = env('GROQ_API_KEY', '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'); 
+            // $apiKey = env('GROQ_API_KEY', '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'); 
             
             $model = 'llama-3.1-8b-instant';
 
